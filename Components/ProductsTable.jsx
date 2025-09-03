@@ -1,17 +1,22 @@
-import React, { useMemo, useState } from 'react'
-import { Edit, Trash2 } from "lucide-react";
+import React, { useEffect, useState, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts, deleteProduct, updateProduct } from "../Redux/Slices/productSlice";
+import { Edit, Trash2, Search } from "lucide-react";
 import Swal from "sweetalert2";
 import { motion } from 'framer-motion'
-import { Search } from 'lucide-react'
-import productsData from "../Data/Products.json"
 import Image from 'next/image';
 
 const ProductsTable = () => {
 
-  const [products, setProducts] = useState(productsData);
+  const dispatch = useDispatch();
+  const { items: products, loading, error } = useSelector((state) => state.products);
   const [SearchProduct, setSearchProduct] = useState("");
   const [editingProduct, setEditingProduct] = useState(null);
   const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
 
   const FilterProduct = useMemo(() => {
     return products.filter((product) =>
@@ -32,7 +37,7 @@ const ProductsTable = () => {
       cancelButtonText: "Cancel",
     }).then((result) => {
       if (result.isConfirmed) {
-        setProducts(products.filter((p) => p.id !== id));
+        dispatch(deleteProduct(id));
         Swal.fire("Deleted!", "The product has been deleted successfully.", "success");
       }
     });
@@ -45,14 +50,11 @@ const ProductsTable = () => {
   };
 
   const handleSave = () => {
-    setProducts(
-      products.map((p) =>
-        p.id === editingProduct.id ? editingProduct : p
-      )
-    );
+    dispatch(updateProduct(editingProduct));
     setShowModal(false);
     Swal.fire("Updated!", "The product has been updated successfully.", "success");
   };
+
 
   const tableHeaders = [
     "Name",
@@ -63,6 +65,9 @@ const ProductsTable = () => {
     "Sales",
     "Actions",
   ];
+
+  if (loading) return <p className="text-white">Loading...</p>;
+  if (error) return <p className="text-red-500">Error: {error}</p>;
 
 
   return (

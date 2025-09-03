@@ -45,7 +45,7 @@ const SalesOverviewChart = () => {
             <YAxis stroke='#9ca3af' tick={{ fontSize: 12 }} width={40} />
             <Tooltip
               contentStyle={{
-                backgroundColor: "rgba(31,40,55,,0.8)",
+                backgroundColor: "rgba(31,40,55,,0.9)",
                 borderColor: "#4b5563",
                 fontSize: "12px"
               }}

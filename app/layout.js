@@ -1,5 +1,6 @@
 import Base from "@/Components/Base";
 import "./globals.css";
+import ReduxProvider from "./ReduxProvider";
 
 export const metadata = {
   title: "admin dashboard",
@@ -11,7 +12,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className='antialiased bg-[#121212] text-white'
       >
-        <Base>{children}</Base>
+        <ReduxProvider>
+          <Base>{children}</Base>
+        </ReduxProvider>
       </body>
     </html>
   );
